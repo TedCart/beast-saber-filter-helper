@@ -2,7 +2,7 @@
 // @namespace    https://openuserjs.org/users/TedCart
 // @name         BeastSaberFilterHelper
 // @copyright    2020, TedCart (https://openuserjs.org/users/TedCart)
-// @version      0.5
+// @version      0.8
 // @license      MIT
 // @description  Bonus for bsaber.com song browsing
 // @author       You
@@ -15,3 +15,6 @@
 // ==OpenUserJS==
 // @author       TedCart
 // ==/OpenUserJS==
+
+// link to source:
+// https://openuserjs.org/scripts/TedCart/BeastSaberFilterHelper/source

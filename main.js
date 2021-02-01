@@ -3,6 +3,12 @@ import * as foo from './src/foo.js'
 // import { addCustomStyleTag } from './src/styles.js'
 // import { miscellaneousLooseEnds } from './src/extra.js'
 
+// Options: (provide checkbox for each)
+// - Hide duplicate songs by same mapper
+// - Hide songs by any mapper you choose
+// - Hide songs without selected difficulty
+// - Hide songs with less than x upvotes (user input)
+
 const noDisplayString = "display:none;"
 
 const elementSelector
@@ -73,20 +79,28 @@ function hideMappers () {
   const requiredDifficulties = getRequiredDifficulties()
   const mapperElements = document.querySelectorAll(elementSelector.mapperName)
   // document.querySelectorAll(elementSelector.mapperName)
+  const listSongByMapper = []
 
-  mapperElements.forEach(el => {
+  mapperElements.forEach((el, c) => {
     let targetEl = el
     for (let i = 0; i < elementSelector.mapperParentNodeCount; i++) {
       targetEl = targetEl.parentNode
     } // end for loop
 
+    const curMapperName = el.innerText.trim()
+    const entryTitleEl = targetEl.querySelector('.entry-title')
+    const curSongName = entryTitleEl ? entryTitleEl.innerText.trim() : 'NO SONG TITLE'
+    const curSongByMapper = `${curSongName} by mapper ${curMapperName}`
+    listSongByMapper.push(curSongByMapper)
+
     const isHidden
-      = (   hiddenMappers.indexOf(el.innerText.trim()) !== -1
-        || !(  requiredDifficulties.length === 0
+      = (   hiddenMappers.indexOf(curMapperName) !== -1 // mapper is hidden
+        || !(  requiredDifficulties.length === 0              // difficulty NOT permitted
             ||  (     requiredDifficulties.length > 0
                   &&  requiredDifficulties.some(diff => hasRequiredDifficulty(targetEl, diff))
                 )
             )
+        || (listSongByMapper.indexOf(curSongByMapper) !== c) // song already appeared in list
         )
 
     if (isHidden) {
