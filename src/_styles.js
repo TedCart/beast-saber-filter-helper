@@ -14,6 +14,14 @@ export const addCustomStyleTag = () => {
       flex-direction: column;
       align-items: center;
     }
+
+    #restore-mapper-button-list {
+      max-width: 200px;
+    }
+    #restore-mapper-button-list button {
+      display: block;
+      margin: 4px 0 4px 28px;
+    }
   `
   document.head.appendChild(newStyle)
 }

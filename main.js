@@ -6,6 +6,7 @@ import  { modalBlockId
         , collapsingArrowSvg
         , getMainModalElement
         , createModalBlock
+        , createCollapsibleSectionContainer
         } from './src/_draggable-modal.js'
 
 import { selectors }          from './src/selectors.js'
@@ -44,13 +45,14 @@ const diffSelector
 
 const hideMapperButtonAttributes
   = { specialId: "hide-mapper-button"
-    , label: "Hide Mapper"
+    , label: "Hide<br>Mapper"
     }
 
 addCustomStyleTag()
 createModalBlock()
 createHideButton()
 createDifficultyCheckboxes(diffSelector)
+createRestoreMapperButtons(getHiddenMappers())
 const bod = document.querySelector('body')
 bod.addEventListener("keydown", elementScrollJump)
 
@@ -68,38 +70,6 @@ setTimeout(
 // Begin support functions
 // Nothing invoked beneath this point
 // ===========================================================================
-//
-
-
-// setTimeout(
-//   () => {
-//     console.log('Running the setTimeout function!')
-//     document.querySelector('head').innerHTML
-//       += `<style>
-//             .hide-button {
-//               border: 1px solid #777;
-//               border-radius: 3px;
-//               padding: 3px;
-//               margin-right: 10px;
-//               display: inline-block;
-//             }
-//             .live-button {
-//               border: 1px solid #777;
-//               border-radius: 3px;
-//               padding: 3px;
-//               margin-right: 10px;
-//               display: inline-block;
-//               color: #EEE;
-//               background: #137bf6;
-//             }
-//           </style>`
-//     putMutationObserverOnMainElement()
-//     hideMappers()
-//   }
-// , 2000)
-
-// Begin support functions
-// Nothing invoked beneath this point
 
 function getHiddenMappers() {
   const rawJSON = localStorage.getItem('hiddenMappers') || '[]'
@@ -108,6 +78,15 @@ function getHiddenMappers() {
 
 function getRequiredDifficulties() {
   const rawJSON = localStorage.getItem('requiredDifficulties') || '[]'
+  return JSON.parse(rawJSON)
+}
+
+function hasRequiredDifficulty (el, key) {
+  return !!el.querySelector(diffSelector[key])
+}
+
+function getHideStatus() {
+  const rawJSON = localStorage.getItem('isHidingPosts') || 'false'
   return JSON.parse(rawJSON)
 }
 
@@ -126,67 +105,6 @@ function updateRequiredDifficulties () {
   return curRequiredDifficulties
 } // end updateRequiredDifficulties
 
-function createHideMapperButtons () {
-  const mapperElements = document.querySelectorAll(selectors.singlePost)
-  mapperElements.forEach(el => {
-    const buttonContainerDiv = el.parentNode
-    // If you already have the button, just stop
-    if (buttonContainerDiv.querySelector(`#${hideMapperButtonAttributes.specialId}`)) return
-
-    const mapperName = el.innerText.trim()
-
-    const newButton     = document.createElement('button')
-    newButton.id        = hideMapperButtonAttributes.specialId
-    newButton.innerText = hideMapperButtonAttributes.label
-    newButton.className = 'hide-button'
-    newButton.addEventListener('click', createHideMapperFunction(mapperName))
-
-    buttonContainerDiv.prepend(newButton)
-  }) // end mapperElements forEach
-} // end createHideMapperButtons
-
-function createHideMapperFunction(mapperName) {
-  return () => {
-    const hiddenMappers = getHiddenMappers()
-    if (hiddenMappers.indexOf(mapperName) === -1) {
-      hiddenMappers.push(mapperName)
-      localStorage.setItem('hiddenMappers', JSON.stringify(hiddenMappers));
-    } // end if mapperName
-    hidePosts()
-  } // end callback function
-} // end createHideMapperFunction
-
-function createRestoreMapperButtons (hiddenMappers) {
-
-  return
-
-  hiddenMappers.forEach(mapperName => {
-    const specialButtonId = `restore-mapper-${mapperName.replace(/[^0-9a-zA-Z]/g,'')}`
-    // don't make the same button twice
-    if (restoreContainerDiv.querySelector(`#${specialButtonId}`)) return
-
-    const newRestoreButton      = document.createElement('button')
-    newRestoreButton.id         = specialButtonId
-    newRestoreButton.innerText  = mapperName
-    newRestoreButton.className  = 'hide-button'
-    newRestoreButton.addEventListener('click', createRestoreFunction(mapperName))
-
-    // restoreContainerDiv.append(newRestoreButton)
-  }) // end hiddenMappers forEach
-} // end createRestoreMapperButtons
-
-function createRestoreFunction(mapperName) {
-  return () => {
-    const hiddenMappers = getHiddenMappers()
-    const mapperIndex = hiddenMappers.indexOf(mapperName)
-    if (mapperIndex !== -1) {
-      hiddenMappers.splice(mapperIndex, 1)
-      localStorage.setItem('hiddenMappers', JSON.stringify(hiddenMappers));
-    } // end if mapperName
-    hidePosts()
-  } // end callback function
-} // end createRestoreFunction
-
 function putMutationObserverOnMainElement (el, callback) {
   // select the target node (USER count tab)
   let mainElementTarget = document.querySelector(elementSelector.mapperName)
@@ -203,22 +121,6 @@ function putMutationObserverOnMainElement (el, callback) {
   // pass in the target node, as well as the observer options
   mainElementObserver.observe(mainElementTarget, mainElementConfig)
 } // end putMutationObserverOnMainElement
-
-function hasRequiredDifficulty (el, key) {
-  return !!el.querySelector(diffSelector[key])
-}
-
-function getHideStatus() {
-  const rawJSON = localStorage.getItem('isHidingPosts') || 'false'
-  return JSON.parse(rawJSON)
-}
-
-function createHideFunction() {
-  return () => {
-    localStorage.setItem('isHidingPosts', JSON.stringify(!getHideStatus()));
-    hidePosts()
-  } // end callback function
-} // end createHideFunction
 
 function hidePosts () {
   const postElements = document.querySelectorAll(selectors.singlePost)
@@ -254,22 +156,22 @@ function hidePosts () {
 
   // updatePostCounts(counts.hiddenMappers)
   createHideMapperButtons()
-  createRestoreMapperButtons(getHiddenMappers())
+  createRestoreMapperButtons(getHiddenMappers(), counts.hiddenMappers)
 } // end hidePosts function
 
-function isValidElement (el, counts) {
+function createHideFunction() {
+  return () => {
+    localStorage.setItem('isHidingPosts', JSON.stringify(!getHideStatus()));
+    hidePosts()
+  } // end callback function
+} // end createHideFunction
 
+function isValidElement (el, counts) {
   const mapperNameEl  = el.querySelector(selectors.singlePost)
   const curMapperName
     = mapperNameEl
       ? mapperNameEl.innerText.trim()
       : 'NO MAPPER NAME'
-
-  // return FALSE for a hidden mapper (and adjust their count)
-  if (getHiddenMappers().indexOf(curMapperName) !== -1) {
-    counts.hiddenMappers[curMapperName]++
-    return false
-  }
 
   // return FALSE for duplicates
   const entryTitleEl = el.querySelector('.entry-title')
@@ -280,6 +182,14 @@ function isValidElement (el, counts) {
   const curSongByMapper = `${curSongName} by mapper ${curMapperName}`
   counts.songList.push(curSongByMapper)
   if (counts.songList.indexOf(curSongByMapper) !== counts.curIndex) {
+    // console.log(`Hiding duplicate map: ${curSongByMapper}`)
+    return false
+  }
+
+  // return FALSE for a hidden mapper (and adjust their count)
+  if (getHiddenMappers().indexOf(curMapperName) !== -1) {
+    counts.hiddenMappers[curMapperName]++
+    // console.log(`Hiding map by ${curMapperName}...`)
     return false
   }
 
@@ -287,6 +197,7 @@ function isValidElement (el, counts) {
   const requiredDifficulties = getRequiredDifficulties()
   if (requiredDifficulties.length > 0 && requiredDifficulties.every(diff => !hasRequiredDifficulty(el, diff))) {
     // console.log(`Hiding "${curSongByMapper}"`)
+    // console.log(`Hiding song with missing difficulties: ${curSongByMapper}`)
     return false
   }
 
@@ -328,32 +239,7 @@ function createDifficultyCheckboxes (difficultyList) {
   const el = getMainModalElement()
   if (!el) return
 
-  const difficultyContainerDiv = document.createElement('section')
-  difficultyContainerDiv.setAttribute('id','difficulty-filter-container')
-  difficultyContainerDiv.setAttribute('class','open')
-
-  const difficultyHeaderDiv = document.createElement('section')
-  difficultyHeaderDiv.setAttribute('class','section-header')
-  difficultyHeaderDiv.onclick=toggleModalDifficultyInputList
-
-  const toggleArrowDiv = document.createElement('section')
-  toggleArrowDiv.setAttribute('class','toggle-arrow')
-  toggleArrowDiv.innerHTML = collapsingArrowSvg
-  toggleArrowDiv.onclick=toggleModalDifficultyInputList
-  difficultyHeaderDiv.append(toggleArrowDiv)
-
-  const modalButton = document.createElement('span')
-  modalButton.setAttribute('class','modal-section-header')
-  modalButton.innerText = "Required Difficulties"
-  difficultyHeaderDiv.append(modalButton)
-
-  // const modalButton = document.createElement('button')
-  // modalButton.setAttribute('class','modal-button modal-input-list-button')
-  // modalButton.onclick=toggleModalDifficultyInputList
-  // modalButton.innerText = "Required Difficulties"
-  // difficultyHeaderDiv.append(modalButton)
-
-  difficultyContainerDiv.append(difficultyHeaderDiv)
+  const difficultyContainerDiv = createCollapsibleSectionContainer("Required Difficulties", "difficulty")
 
   const inputListContainer = document.createElement('ul')
   inputListContainer.setAttribute('class','modal-input-list difficulties')
@@ -394,18 +280,6 @@ function createDifficultyCheckboxes (difficultyList) {
   el.append(difficultyContainerDiv)
 } // end createDifficultyCheckboxes
 
-function toggleModalDifficultyInputList (ev) {
-  console.log('fuck yeah')
-  const inputDiv = document.querySelector('#difficulty-filter-container');
-  const isOpen = /open/.test(inputDiv.className)
-
-  isOpen
-    ? inputDiv.classList.remove('open')
-    : inputDiv.classList.add('open')
-
-  ev.preventDefault();
-} // end toggleModalDifficultyInputList
-
 function putMutationObserverOnInputList (el, callback) {
   let inputEl = el
   if (!inputEl) return
@@ -424,3 +298,79 @@ function putMutationObserverOnInputList (el, callback) {
   // pass in the target node, as well as the observer options
   mainElementObserver.observe(inputEl, inputElConfig)
 } // end putMutationObserverOnInputList
+
+function createHideMapperButtons () {
+  const mapperElements = document.querySelectorAll(selectors.singlePost)
+  mapperElements.forEach(el => {
+    const buttonContainerDiv = el.parentNode
+    // If you already have the button, just stop
+    if (buttonContainerDiv.querySelector(`#${hideMapperButtonAttributes.specialId}`)) return
+
+    const mapperName = el.innerText.trim()
+
+    const newButton     = document.createElement('button')
+    newButton.id        = hideMapperButtonAttributes.specialId
+    newButton.innerHTML = hideMapperButtonAttributes.label
+    newButton.className = 'hide-button'
+    newButton.addEventListener('click', createHideMapperFunction(mapperName))
+
+    buttonContainerDiv.prepend(newButton)
+  }) // end mapperElements forEach
+} // end createHideMapperButtons
+
+function createHideMapperFunction(mapperName) {
+  return () => {
+    const hiddenMappers = getHiddenMappers()
+    if (hiddenMappers.indexOf(mapperName) === -1) {
+      hiddenMappers.push(mapperName)
+      localStorage.setItem('hiddenMappers', JSON.stringify(hiddenMappers));
+    } // end if mapperName
+    hidePosts()
+  } // end callback function
+} // end createHideMapperFunction
+
+function createRestoreMapperButtons (hiddenMappers, counts={}) {
+  const el = getMainModalElement()
+  if (!el) return
+
+  const restoreMapperContainerDiv = createCollapsibleSectionContainer("Restore Mappers", "restore-mapper")
+
+  let listContainerDiv = document.querySelector(`#restore-mapper-button-list`)
+  if (!listContainerDiv) {
+    listContainerDiv    = document.createElement('section')
+    listContainerDiv.id = `restore-mapper-button-list`
+    listContainerDiv.className  = 'modal-input-list'
+    restoreMapperContainerDiv.append(listContainerDiv)
+    el.append(restoreMapperContainerDiv)
+  }
+
+  hiddenMappers.forEach(mapperName => {
+    const specialButtonId = `restore-mapper-${mapperName.replace(/[^0-9a-zA-Z]/g,'')}`
+    // don't make the same button twice
+    if (listContainerDiv.querySelector(`#${specialButtonId}`)) return
+
+    const newRestoreButton      = document.createElement('button')
+    newRestoreButton.id         = specialButtonId
+    newRestoreButton.innerText  = `${counts[mapperName] || 0} - ${mapperName}`
+    // newRestoreButton.innerText  = mapperName
+    newRestoreButton.className  = 'hide-button'
+    newRestoreButton.addEventListener('click', createRestoreFunction(mapperName, specialButtonId))
+
+    listContainerDiv.append(newRestoreButton)
+  }) // end hiddenMappers forEach
+
+} // end createRestoreMapperButtons
+
+function createRestoreFunction(mapperName, specialButtonId) {
+  return () => {
+    const hiddenMappers = getHiddenMappers()
+    const mapperIndex = hiddenMappers.indexOf(mapperName)
+    if (mapperIndex !== -1) {
+      hiddenMappers.splice(mapperIndex, 1)
+      localStorage.setItem('hiddenMappers', JSON.stringify(hiddenMappers));
+    } // end if mapperName
+    const restoreMapperButton = document.querySelector(`#${specialButtonId}`)
+    if (restoreMapperButton) restoreMapperButton.remove()
+    hidePosts()
+  } // end callback function
+} // end createRestoreFunction

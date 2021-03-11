@@ -76,3 +76,42 @@ export function createModalBlock () {
 
   // return modalBlock
 }
+
+export function createCollapsibleSectionContainer (sectionTitle, idPrefix) {
+
+  const firstAttempt = document.querySelector(`#${idPrefix}-filter-container`)
+  if (firstAttempt) return firstAttempt
+
+  function toggleSectionVisibility (ev) {
+    ev.preventDefault()
+    const containerDiv = document.querySelector(`#${idPrefix}-filter-container`)
+    const isOpen = /open/.test(containerDiv.className)
+
+    isOpen
+      ? containerDiv.classList.remove('open')
+      : containerDiv.classList.add('open')
+  } // end toggleSectionVisibility
+
+  const sectionContainerDiv = document.createElement('section')
+  sectionContainerDiv.setAttribute('id',`${idPrefix}-filter-container`)
+  sectionContainerDiv.setAttribute('class','open')
+
+  const sectionHeaderDiv = document.createElement('section')
+  sectionHeaderDiv.setAttribute('class','section-header')
+  sectionHeaderDiv.onclick=toggleSectionVisibility
+
+  const toggleArrowDiv = document.createElement('section')
+  toggleArrowDiv.setAttribute('class','toggle-arrow')
+  toggleArrowDiv.innerHTML = collapsingArrowSvg
+  toggleArrowDiv.onclick=toggleSectionVisibility
+  sectionHeaderDiv.append(toggleArrowDiv)
+
+  const sectionHeaderText = document.createElement('span')
+  sectionHeaderText.setAttribute('class','modal-section-header')
+  sectionHeaderText.innerText = sectionTitle
+  sectionHeaderDiv.append(sectionHeaderText)
+
+  sectionContainerDiv.append(sectionHeaderDiv)
+
+  return sectionContainerDiv
+} // end createCollapsibleSectionContainer
