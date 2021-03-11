@@ -344,8 +344,8 @@ function createRestoreMapperButtons (hiddenMappers, counts={}) {
 
     const newRestoreButton      = document.createElement('button')
     newRestoreButton.id         = specialButtonId
-    newRestoreButton.innerText  = `${counts[mapperName] || 0} - ${mapperName}`
-    // newRestoreButton.innerText  = mapperName
+    // newRestoreButton.innerText  = `${counts[mapperName] || 0} - ${mapperName}`
+    newRestoreButton.innerText  = mapperName
     newRestoreButton.className  = 'hide-button'
     newRestoreButton.addEventListener('click', createRestoreFunction(mapperName, specialButtonId))
 
