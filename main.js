@@ -236,9 +236,6 @@ function createHideButton () {
 
 
 function createDifficultyCheckboxes (difficultyList) {
-  const el = getMainModalElement()
-  if (!el) return
-
   const difficultyContainerDiv = createCollapsibleSectionContainer("Required Difficulties", "difficulty")
 
   const inputListContainer = document.createElement('ul')
@@ -277,7 +274,6 @@ function createDifficultyCheckboxes (difficultyList) {
 
   putMutationObserverOnInputList(inputListContainer, hidePosts)
   difficultyContainerDiv.append(inputListContainer)
-  el.append(difficultyContainerDiv)
 } // end createDifficultyCheckboxes
 
 function putMutationObserverOnInputList (el, callback) {
@@ -330,8 +326,6 @@ function createHideMapperFunction(mapperName) {
 } // end createHideMapperFunction
 
 function createRestoreMapperButtons (hiddenMappers, counts={}) {
-  const el = getMainModalElement()
-  if (!el) return
 
   const restoreMapperContainerDiv = createCollapsibleSectionContainer("Restore Mappers", "restore-mapper")
 
@@ -341,7 +335,6 @@ function createRestoreMapperButtons (hiddenMappers, counts={}) {
     listContainerDiv.id = `restore-mapper-button-list`
     listContainerDiv.className  = 'modal-input-list'
     restoreMapperContainerDiv.append(listContainerDiv)
-    el.append(restoreMapperContainerDiv)
   }
 
   hiddenMappers.forEach(mapperName => {

@@ -78,6 +78,8 @@ export function createModalBlock () {
 }
 
 export function createCollapsibleSectionContainer (sectionTitle, idPrefix) {
+  const el = getMainModalElement()
+  if (!el) return
 
   const firstAttempt = document.querySelector(`#${idPrefix}-filter-container`)
   if (firstAttempt) return firstAttempt
@@ -112,6 +114,7 @@ export function createCollapsibleSectionContainer (sectionTitle, idPrefix) {
   sectionHeaderDiv.append(sectionHeaderText)
 
   sectionContainerDiv.append(sectionHeaderDiv)
+  el.append(sectionContainerDiv)
 
   return sectionContainerDiv
 } // end createCollapsibleSectionContainer
