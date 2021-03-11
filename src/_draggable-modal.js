@@ -5,7 +5,7 @@ export const modalBlockId = "draggable-modal-block"
 export const collapsingArrowSvg
   = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 14 14" width="17px" height="17px">
       <g fill="none" fill-rule="evenodd">
-        <path d="M3.29175 4.793c-.389.392-.389 1.027 0 1.419l2.939 2.965c.218.215.5.322.779.322s.556-.107.769-.322l2.93-2.955c.388-.392.388-1.027 0-1.419-.389-.392-1.018-.392-1.406 0l-2.298 2.317-2.307-2.327c-.194-.195-.449-.293-.703-.293-.255 0-.51.098-.703.293z" fill="#1a2c5a">
+        <path d="M3.29175 4.793c-.389.392-.389 1.027 0 1.419l2.939 2.965c.218.215.5.322.779.322s.556-.107.769-.322l2.93-2.955c.388-.392.388-1.027 0-1.419-.389-.392-1.018-.392-1.406 0l-2.298 2.317-2.307-2.327c-.194-.195-.449-.293-.703-.293-.255 0-.51.098-.703.293z" fill="#FFFFFF">
         </path>
       </g>
     </svg>`
@@ -19,6 +19,7 @@ export function createModalBlock () {
   addCustomModalStyleTag()
   const modalBlock = document.createElement('div')
   modalBlock.setAttribute('id', modalBlockId)
+  // modalBlock.setAttribute('title', "Click and hold to drag...")
 
   document.querySelector('body').prepend(modalBlock)
 
@@ -30,6 +31,13 @@ export function createModalBlock () {
 
     if (event.target.tagName === "INPUT") return
     if (event.target.tagName === "BUTTON") return
+    if (event.target.tagName === "SPAN") return
+    if (event.target.tagName === "SECTION") return
+    if (event.target.tagName === "LABEL") return
+    if (event.target.tagName === "SVG") return
+    if (event.target.tagName === "G") return
+    if (event.target.tagName === "PATH") return
+    // if (event.target.tagName === "LI") return
 
     // const modalBlock = document.querySelector(`#${modalBlockId}`)
     // if (!modalBlock) return

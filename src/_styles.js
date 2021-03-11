@@ -32,15 +32,28 @@ export const addCustomModalStyleTag = () => {
       padding: 3px 5px;
       border-radius: 5px;
     }
+    .modal-section-header {
+      display: inline-block;
+      cursor: pointer;
+      font-size: 1.2em;
+    }
     .hide-button {
       margin-bottom:5px;
-      background: #DDD;
-      color:#222;
+      /* background: #DDD; */
+      /* color:#222; */
+      border: 1px solid #777;
+      border-radius: 2px;
+      padding: 3px;
     }
     .live-button {
       margin-bottom:5px;
+      font-weight: 800;
+      font-size: 107%;
+      border: 1px solid #777;
+      border-radius: 3px;
+      padding: 3px;
       color: #EEE;
-      background: blue;
+      background: #2762a6;
     }
     .modal-input-list-button {
       background: #000;
@@ -68,7 +81,40 @@ export const addCustomModalStyleTag = () => {
     }
     .input-modal-checkbox {
       display:inline-block;
+      margin-left: 25px;
     }
+
+    .modal-input-list label {
+      display: inline-block;
+      margin: 0 0 0 8px;
+      font-size: 1em;
+    }
+    .modal-input-list li { margin: 0; }
+
+    section.section-header {
+      display: flex;
+    }
+
+    .toggle-arrow {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      height: 25px;
+      width:  25px;
+      border-radius: 2px;
+      margin: 0;
+      transition: 300 ms;
+      cursor: pointer;
+      /* transform: rotate(-90deg); */
+      opacity: .8;
+    }
+    .toggle-arrow:hover {
+      opacity: 1;
+      background: black;
+    }
+
+    .toggle-arrow svg       { transform: rotate(-90deg); transition: 300ms; }
+    .open .toggle-arrow svg { transform: rotate(0deg); }
 
     .modal-input-list {
       opacity: 0;
@@ -78,7 +124,7 @@ export const addCustomModalStyleTag = () => {
       padding: 0;
       margin: 0;
     }
-    .modal-input-list.open {
+    .open .modal-input-list {
       display: block;
       visibility: visible;
       opacity: 1;
