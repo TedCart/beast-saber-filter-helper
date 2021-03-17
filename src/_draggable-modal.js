@@ -85,10 +85,10 @@ export function createCollapsibleSectionContainer (sectionTitle, idPrefix) {
   if (firstAttempt) return firstAttempt
 
   function toggleSectionVisibility (ev) {
-    const containerDiv = ev.target.closest(`#${idPrefix}-filter-container`)
-    if (!containerDiv) return;
+    const clickableDiv = ev.target.closest(`#${idPrefix}-filter-container > .section-header`)
+    if (!clickableDiv) return;
     ev.preventDefault()
-    // const containerDiv = document.querySelector(`#${idPrefix}-filter-container`)
+    const containerDiv = document.querySelector(`#${idPrefix}-filter-container`)
     const isOpen = /open/.test(containerDiv.className)
 
     isOpen

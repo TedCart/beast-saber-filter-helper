@@ -2,7 +2,6 @@
 import  { addCustomStyleTag }         from './src/_styles.js'
 import  { elementScrollJump }         from './src/_wasd-scroll.js'
 import  { modalBlockId
-        , collapsingArrowSvg
         , getMainModalElement
         , createModalBlock
         , createCollapsibleSectionContainer
@@ -335,6 +334,16 @@ function createRestoreMapperButtons (hiddenMappers, counts={}) {
     listContainerDiv.className  = 'modal-input-list'
     restoreMapperContainerDiv.append(listContainerDiv)
   }
+
+  // const noHiddenMappersMessage = "No mappers are hidden"
+  // // const noHiddenMappersStyle = "margin-left: 25px; font-style: italic;"
+  // if (hiddenMappers && hiddenMappers.length === 0) {
+  //   listContainerDiv.innerHTML = noHiddenMappersMessage
+  //   // listContainerDiv.style = noHiddenMappersStyle
+  // } else {
+  //   listContainerDiv.innerHTML = listContainerDiv.innerHTML.replace(noHiddenMappersMessage, '')
+  //   // listContainerDiv.style = listContainerDiv.style.replace(noHiddenMappersStyle, '')
+  // }
 
   hiddenMappers.forEach(mapperName => {
     const specialButtonId = `restore-mapper-${mapperName.replace(/[^0-9a-zA-Z]/g,'')}`
