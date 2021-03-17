@@ -91,9 +91,13 @@ export function createCollapsibleSectionContainer (sectionTitle, idPrefix) {
     const containerDiv = document.querySelector(`#${idPrefix}-filter-container`)
     const isOpen = /open/.test(containerDiv.className)
 
-    isOpen
-      ? containerDiv.classList.remove('open')
-      : containerDiv.classList.add('open')
+    if (isOpen) {
+      containerDiv.classList.remove('open')
+      localStorage.setItem(`${idPrefix}IsHidden`, 'true')
+    } else {
+      containerDiv.classList.add('open')
+      localStorage.setItem(`${idPrefix}IsHidden`, 'false')
+    }
   } // end toggleSectionVisibility
 
   // Putting this click listener on the document is (ironically) better for performance
@@ -102,7 +106,9 @@ export function createCollapsibleSectionContainer (sectionTitle, idPrefix) {
 
   const sectionContainerDiv = document.createElement('section')
   sectionContainerDiv.setAttribute('id',`${idPrefix}-filter-container`)
-  sectionContainerDiv.setAttribute('class','open')
+  if (!JSON.parse(localStorage.getItem(`${idPrefix}IsHidden`) || 'false')) {
+    sectionContainerDiv.setAttribute('class','open')
+  }
 
   const sectionHeaderDiv = document.createElement('section')
   sectionHeaderDiv.setAttribute('class','section-header')
@@ -238,12 +244,6 @@ function addCustomModalStyleTag () {
     }
     .modal-input-list li {
       display: block;
-    }
-    .modal-post-count {
-      margin-right: 10px;
-      display: inline-block;
-      min-width: 3em;
-      text-align: right;
     }
   `
   document.head.appendChild(newStyle)
