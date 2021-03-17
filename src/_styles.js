@@ -31,6 +31,7 @@ export const addCustomModalStyleTag = () => {
   newStyle.setAttribute('type', 'text/css')
   // classToColor background, color, padding, margin
   newStyle.innerHTML = `
+    svg { pointer-events: none; }
     .modal-button {
       text-align: center;
       margin:auto;

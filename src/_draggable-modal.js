@@ -85,8 +85,10 @@ export function createCollapsibleSectionContainer (sectionTitle, idPrefix) {
   if (firstAttempt) return firstAttempt
 
   function toggleSectionVisibility (ev) {
+    const containerDiv = ev.target.closest(`#${idPrefix}-filter-container`)
+    if (!containerDiv) return;
     ev.preventDefault()
-    const containerDiv = document.querySelector(`#${idPrefix}-filter-container`)
+    // const containerDiv = document.querySelector(`#${idPrefix}-filter-container`)
     const isOpen = /open/.test(containerDiv.className)
 
     isOpen
@@ -94,18 +96,20 @@ export function createCollapsibleSectionContainer (sectionTitle, idPrefix) {
       : containerDiv.classList.add('open')
   } // end toggleSectionVisibility
 
+  // Putting this click listener on the document is (ironically) better for performance
+  // https://gomakethings.com/detecting-click-events-on-svgs-with-vanilla-js-event-delegation/
+  document.addEventListener('click', toggleSectionVisibility)
+
   const sectionContainerDiv = document.createElement('section')
   sectionContainerDiv.setAttribute('id',`${idPrefix}-filter-container`)
   sectionContainerDiv.setAttribute('class','open')
 
   const sectionHeaderDiv = document.createElement('section')
   sectionHeaderDiv.setAttribute('class','section-header')
-  sectionHeaderDiv.onclick=toggleSectionVisibility
 
   const toggleArrowDiv = document.createElement('section')
   toggleArrowDiv.setAttribute('class','toggle-arrow')
   toggleArrowDiv.innerHTML = collapsingArrowSvg
-  toggleArrowDiv.onclick=toggleSectionVisibility
   sectionHeaderDiv.append(toggleArrowDiv)
 
   const sectionHeaderText = document.createElement('span')
