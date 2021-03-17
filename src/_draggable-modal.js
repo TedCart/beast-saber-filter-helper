@@ -81,7 +81,7 @@ export function createCollapsibleSectionContainer (sectionTitle, idPrefix) {
   const el = getMainModalElement()
   if (!el) return
 
-  const firstAttempt = document.querySelector(`#${idPrefix}-filter-container`)
+  const firstAttempt = el.querySelector(`#${idPrefix}-filter-container`)
   if (firstAttempt) return firstAttempt
 
   function toggleSectionVisibility (ev) {
