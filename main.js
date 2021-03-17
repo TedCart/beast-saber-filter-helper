@@ -9,7 +9,7 @@ import  { modalBlockId
 
 import { selectors }          from './src/selectors.js'
 
-console.log('Doing all the stuff!')
+// console.log('Doing all the stuff!')
 
 const noDisplayString = "display:none;"
 

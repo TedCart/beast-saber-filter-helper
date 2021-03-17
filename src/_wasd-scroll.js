@@ -73,10 +73,10 @@ export function elementScrollJump (ev) {
   ev.preventDefault()
 
   if (upList.indexOf(activeKeyCode) !== -1) {
-    console.log("Scrolling to previous element...")
+    // console.log("Scrolling to previous element...")
     scrollToPreviousElement(postList)
   } else if (downList.indexOf(activeKeyCode) !== -1) {
-    console.log("Scrolling to next element...")
+    // console.log("Scrolling to next element...")
     scrollToNextElement(postList)
   }
 
