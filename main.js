@@ -5,6 +5,7 @@ import  { modalBlockId
         , getMainModalElement
         , createModalBlock
         , createCollapsibleSectionContainer
+        , createNewCheckboxListItem
         } from './src/_draggable-modal.js'
 
 import { selectors }          from './src/selectors.js'
@@ -244,30 +245,11 @@ function createDifficultyCheckboxes (difficultyList) {
   const requiredDifficulties = getRequiredDifficulties()
 
   for (const key in difficultyList) {
-    const newListItem = document.createElement('li')
-
-    // const newCount = document.createElement('span')
-    // newCount.setAttribute('class',`modal-post-count`)
-    // newCount.setAttribute('id',`post-count-${key}`)
-    // newCount.innerText = "0"
-
-    const newInput = document.createElement('input')
-    newInput.setAttribute('class',`input-modal-checkbox`)
-    newInput.setAttribute('id',`modal-checkbox-${key}`)
-    newInput.setAttribute('type',`checkbox`)
-    // newInput.setAttribute('data-diff-selector',`${difficultyList[key]}`)
-    newInput.oninput = function(e) {
-      this.setAttribute('value', newInput.checked)
-    }
-
-    if (requiredDifficulties.indexOf(key) !== -1) newInput.checked = true
-
-    const newLabel = document.createElement('label')
-    newLabel.innerText = key
-    // newListItem.append(newCount)
-    newListItem.append(newInput)
-    newListItem.append(newLabel)
-    inputListContainer.append(newListItem)
+    const checkboxOptions
+      = { id: `modal-checkbox-${key}`
+        , label: key
+        , checked: !!(requiredDifficulties.indexOf(key) !== -1) }
+    createNewCheckboxListItem(inputListContainer, checkboxOptions)
   } // end for loop
 
   putMutationObserverOnInputList(inputListContainer, hidePosts)
