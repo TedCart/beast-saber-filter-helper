@@ -2,9 +2,9 @@
 // @namespace    https://openuserjs.org/users/TedCart
 // @name         BeastSaberFilterHelper
 // @copyright    2020, TedCart (https://openuserjs.org/users/TedCart)
-// @version      0.9
+// @version      1.0
 // @license      MIT
-// @description  Bonus for bsaber.com song browsing
+// @description  Help filter by difficulty or author while browsing songs on bsaber.com
 // @author       You
 // @match        https://bsaber.com/newest/*
 // @match        https://bsaber.com/curator-recommended/*
