@@ -5,23 +5,28 @@ export const addCustomStyleTag = () => {
   newStyle.setAttribute('type', 'text/css')
   // classToColor background, color, padding, margin
   newStyle.innerHTML = `
-    body {
-      margin-top: 0;
-    }
+    /* DO NOT EDIT BELOW THIS POINT */
+    /* BEGIN CUSTOM CSS */
+body {
+  margin-top: 0;
+}
 
-    .post-content > .row.row-fluid {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
+.post-content > .row.row-fluid {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
 
-    #restore-mapper-button-list {
-      max-width: 200px;
-    }
-    #restore-mapper-button-list button {
-      display: block;
-      margin: 4px 0 4px 28px;
-    }
+#restore-mapper-button-list {
+  max-width: 200px;
+}
+
+#restore-mapper-button-list button {
+  display: block;
+  margin: 4px 0 4px 28px;
+}
+
+/* END CUSTOM CSS */
   `
   document.head.appendChild(newStyle)
 }
