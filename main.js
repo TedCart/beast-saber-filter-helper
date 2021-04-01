@@ -10,6 +10,9 @@ import  { modalBlockId
 
 import { selectors }          from './src/selectors.js'
 
+const activeIntervals = {}
+const intervalCounts = {}
+
 // console.log('Doing all the stuff!')
 
 const noDisplayString = "display:none;"
@@ -55,15 +58,7 @@ createRestoreMapperButtons(getHiddenMappers())
 const bod = document.querySelector('body')
 bod.addEventListener("keydown", elementScrollJump)
 
-
-setTimeout(
-  () => {
-    console.log('Running the setTimeout function!')
-    putMutationObserverOnMainElement(bod, hidePosts)
-    hidePosts()
-    // hideMappers()
-  }
-, 2000)
+putMutationObserverOnMainElement(bod, hidePosts)
 
 // ===========================================================================
 // Begin support functions
@@ -103,23 +98,6 @@ function updateRequiredDifficulties () {
 
   return curRequiredDifficulties
 } // end updateRequiredDifficulties
-
-function putMutationObserverOnMainElement (el, callback) {
-  // select the target node (USER count tab)
-  let mainElementTarget = document.querySelector(elementSelector.mapperName)
-  for (let i = 0; i < (elementSelector.mapperParentNodeCount + 1); i++)
-    mainElementTarget = mainElementTarget.parentNode
-
-  // configuration of the observer:
-  const mainElementConfig = { childList: true }
-
-  // create an observer instance
-  const mainElementObserver
-    = new MutationObserver(callback) // end MutationObserver
-
-  // pass in the target node, as well as the observer options
-  mainElementObserver.observe(mainElementTarget, mainElementConfig)
-} // end putMutationObserverOnMainElement
 
 function hidePosts () {
   const postElements = document.querySelectorAll(selectors.singlePost)
@@ -357,3 +335,49 @@ function createRestoreFunction(mapperName, specialButtonId) {
     hidePosts()
   } // end callback function
 } // end createRestoreFunction
+
+
+function startMOInterval (sectionName, callback, options={}) {
+  activeIntervals[sectionName]
+    = setInterval(() => {
+        putObserverOnEl(sectionName, callback, options)
+      }, 700)
+} // end startMOInterval
+
+function putObserverOnEl (key, callback, options) {
+  intervalCounts[key] = intervalCounts[key] || 0
+  intervalCounts[key]++
+  if (intervalCounts[key] > 8) {
+    console.log(`Did not find element for "${key}" after ${intervalCounts[key]} attempts`)
+    clearInterval(activeIntervals[key])
+    activeIntervals[key] = undefined
+    return
+  }
+  let el  = document.querySelector(elementSelector[key])
+  if (!el) return
+  for (let i = 0; i < (elementSelector.mapperParentNodeCount + 1); i++)
+    el = el.parentNode
+  if (!el) return
+
+  callback(el)
+  const elConfig = options.config || { childList: true }
+  const elObserver = options.observer || new MutationObserver((mutations) => {
+        if (options.msg) console.log(options.msg)
+        callback(el)
+      }) // end MutationObserver
+  elObserver.observe(el, elConfig)
+  console.log(`Successfully put observer on "${key}"`)
+  clearInterval(activeIntervals[key])
+  activeIntervals[key] = undefined
+} // end function putObserverOnEl
+
+function putMutationObserverOnMainElement (el, callback) {
+  startMOInterval("mapperName"
+  , callback
+  , { config: { childList: true
+              // , subtree: true
+              }
+    // , msg: "processing ..."
+    }
+  )
+} // end putMutationObserverOnMainElement
