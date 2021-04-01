@@ -51,7 +51,7 @@ const hideMapperButtonAttributes
     }
 
 addCustomStyleTag()
-createModalBlock()
+createModalBlock({top: '150px', left: '45px'})
 createHideButton()
 createDifficultyCheckboxes(diffSelector)
 createRestoreMapperButtons(getHiddenMappers())

@@ -19,11 +19,17 @@ const maxListHeight
             , 200
             )
 
-export function createModalBlock () {
+export function createModalBlock (startPositionOptions) {
 
-  addCustomModalStyleTag()
+  addCustomModalStyleTag(startPositionOptions)
   const modalBlock = document.createElement('div')
   modalBlock.setAttribute('id', modalBlockId)
+  if (startPositionOptions.top) {
+    modalBlock.style.top = `${startPositionOptions.top}`
+  }
+  if (startPositionOptions.left) {
+    modalBlock.style.left = `${startPositionOptions.left}`
+  }
   // modalBlock.setAttribute('title', "Click and hold to drag...")
 
   document.querySelector('body').prepend(modalBlock)
@@ -134,10 +140,15 @@ export function createCollapsibleSectionContainer (sectionTitle, idPrefix) {
   return sectionContainerDiv
 } // end createCollapsibleSectionContainer
 
-function addCustomModalStyleTag () {
+function addCustomModalStyleTag (startPositionOptions={}) {
   const newStyle = document.createElement("style")
   newStyle.setAttribute('type', 'text/css')
   // classToColor background, color, padding, margin
+  if (  !startPositionOptions.top
+    &&  !startPositionOptions.left) {
+      startPositionOptions.top = "40px"
+      startPositionOptions.left = "10px"
+  }
   newStyle.innerHTML = `
     svg { pointer-events: none; }
     .modal-button {
@@ -179,8 +190,8 @@ function addCustomModalStyleTag () {
     }
     #draggable-modal-block {
       position: fixed;
-      top: 40px;
-      left: 10px;
+      ${startPositionOptions.top ? "top: " + startPositionOptions.top + ";" : ''}
+      ${startPositionOptions.left ? "left: " + startPositionOptions.left + ";" : ''}
       padding: 15px 5px;
       min-height: 20px;
       min-width: 20px;
